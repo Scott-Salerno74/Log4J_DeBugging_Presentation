@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.Random;
 
@@ -112,6 +113,62 @@ public class Puzzle {
                return false;
        }
        return true;
+   }
+
+   private void drawGrid(Graphics2D g){
+       for(int i =0; i< pieces.length; i++){
+           int row = i/size;
+           int col= i%size;
+           //create coordinates
+           int x = (margin + col*pieceSize);
+           int y = (margin + row*pieceSize);
+           //special case
+           if(pieces[i] == 0){
+               if(gameOver){
+                   g.setColor(foreGround);
+                   drawCentString(g,"v",x,y);
+               }
+               continue;
+           }
+           //other pieces
+           g.setColor(puzzlePannel.getForeground());
+           g.fillRoundRect(x,y,pieceSize,pieceSize,25,25);
+           g.setColor(Color.BLACK);
+           g.drawRoundRect(x,y,pieceSize,pieceSize,25,25);
+           g.setColor(Color.WHITE);
+
+           drawCentString(g,String.valueOf(pieces[i]),x,y);
+
+       }
+
+
+
+   }
+
+   private void drawStart(Graphics2D g){
+       if(gameOver){
+           g.setFont(puzzlePannel.getFont().deriveFont(Font.BOLD,18));
+           g.setColor(Color.BLACK);
+           String s = "Click To Start!";
+           g.drawString(s,(puzzlePannel.getWidth()-g.getFontMetrics().stringWidth(s))/2,puzzlePannel.getHeight()-margin);
+       }
+
+   }
+
+   private void drawCentString(Graphics2D g,String s, int x, int y){
+     FontMetrics fM = g.getFontMetrics();
+     int ascending = fM.getAscent();
+     int descending = fM.getDescent();
+       g.drawString(s,x+ (pieceSize - fM.stringWidth(s))/2,y+(ascending +(pieceSize - (ascending-descending))/2));
+   }
+
+   @Override
+    protected void paintComponent(Graphics g){
+       super.paintComponent(g);
+       Graphics2D g2d = (Graphics2D) g;
+       g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+       drawGrid(g2d);
+       drawStart(g2d);
    }
 
 }
