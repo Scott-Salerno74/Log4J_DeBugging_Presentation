@@ -4,8 +4,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.Random;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class Puzzle extends JPanel {
+
+
+public class Puzzle extends JPanel{
     // size of the puzzle
     private int size;
     // number of tiles in puzzle
@@ -28,6 +32,8 @@ public class Puzzle extends JPanel {
     private int gridSize;
     //Game Over [true = game over, false !=]
     private boolean gameOver;
+    //Log4J setup
+    static final Logger logger = LogManager.getLogger(Puzzle.class.shuffle());
 
     private JPanel puzzlePannel = new JPanel();
 
