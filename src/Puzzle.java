@@ -33,7 +33,7 @@ public class Puzzle extends JPanel{
     //Game Over [true = game over, false !=]
     private boolean gameOver;
     //Log4J setup
-    static final Logger logger = LogManager.getLogger(Puzzle.class.shuffle());
+    static final Logger logger = LogManager.getLogger(Puzzle.class);
 
     private JPanel puzzlePannel = new JPanel();
 
