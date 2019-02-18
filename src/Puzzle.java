@@ -31,17 +31,17 @@ public class Puzzle extends JPanel {
 
     private JPanel puzzlePannel = new JPanel();
 
-   public Puzzle(int size, int dim, int marg){
-       this.size = size;
-       dimensions = dim;
-       margin = marg;
+   public Puzzle(){
+       size = 4;
+       dimensions = 550;
+       margin = 30;
 
        //Pieces
        numTiles = (size * size -1); //left space for blank tile
        pieces = new int[size*size];
 
        //grid size
-       gridSize = (dim-2* margin);
+       gridSize = (dimensions-2* margin);
        pieceSize = gridSize/size;
 
        //Set Up JPanel
@@ -172,12 +172,12 @@ public class Puzzle extends JPanel {
    }
 
 
-   public static void main(String[] args){
+   public void run(){
        SwingUtilities.invokeLater(() -> {
            JFrame frame = new JFrame();
            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
            frame.setTitle("Row 2's Puzzle Game");
-           frame.add(new Puzzle(10,550,30),BorderLayout.CENTER);
+           frame.add(new Puzzle(),BorderLayout.CENTER);
            frame.pack();
            frame.setLocationRelativeTo(null);
            frame.setVisible(true);
