@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.Random;
 
-public class Puzzle {
+public class Puzzle extends JPanel {
     // size of the puzzle
     private int size;
     // number of tiles in puzzle
@@ -170,5 +170,20 @@ public class Puzzle {
        drawGrid(g2d);
        drawStart(g2d);
    }
+
+
+   public static void main(String[] args){
+       SwingUtilities.invokeLater(() -> {
+           JFrame frame = new JFrame();
+           frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+           frame.setTitle("Row 2's Puzzle Game");
+           frame.add(new Puzzle(10,550,30),BorderLayout.CENTER);
+           frame.pack();
+           frame.setLocationRelativeTo(null);
+           frame.setVisible(true);
+
+       });
+   }
+
 
 }
