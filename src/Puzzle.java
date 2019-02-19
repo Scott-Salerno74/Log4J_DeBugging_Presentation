@@ -59,6 +59,52 @@ public class Puzzle extends JPanel{
        gameOver = true;
 
        puzzlePannel.addMouseListener(new MouseAdapter() {
+           @Override
+           public void mousePressed(MouseEvent e){
+               if(gameOver){
+                   newGame();
+               }
+               else{
+                   int ex = e.getX() -margin;
+                   int ey = e.getY() -margin;
+                    //grid clicking
+                   if (ex<0||ex >gridSize || ey<0 || ey >gridSize){
+                       return;
+                   }
+                   int c1 = ex/ pieceSize;
+                   int r1 = ey/ pieceSize;
+
+                   //position of blank piece
+                   int c2 = blankPiece % size;
+                   int r2 = blankPiece / size;
+
+                   //convert to coordinate
+                   int clickPos = r1*size+c1;
+                   int dir =0;
+                   //search direction for movement
+                   if (c1 ==c2&& Math.abs(r1-r2)>0) {
+                        dir =(r1 -r2) > 0 ? size: -size;
+
+                   } else if(r1 ==r2 && Math.abs(c1-c2)>0){
+                       dir =(c1 -c2) > 0 ? 1: -1;
+
+                   }
+                   if (dir != 0){
+                       //move tile
+                       do{
+                           int newBlankPiece = blankPiece+dir;
+                           pieces[blankPiece] = pieces[newBlankPiece];
+                           blankPiece= newBlankPiece;
+                       } while(blankPiece!= clickPos);
+
+                       pieces[blankPiece] = 0;
+                       }
+                       //check if solved
+                   gameOver = isSolved();
+                   }
+                   //repaint panel
+                repaint();
+               }
 
        });
 
@@ -66,7 +112,7 @@ public class Puzzle extends JPanel{
 
 
 
-
+      newGame();
 
    }
 
@@ -126,8 +172,8 @@ public class Puzzle extends JPanel{
            int row = i/size;
            int col= i%size;
            //create coordinates
-           int x = (margin + col*pieceSize);
-           int y = (margin + row*pieceSize);
+           int x = margin + col*pieceSize;
+           int y = margin + row*pieceSize;
            //special case
            if(pieces[i] == 0){
                if(gameOver){
@@ -143,6 +189,7 @@ public class Puzzle extends JPanel{
            g.drawRoundRect(x,y,pieceSize,pieceSize,25,25);
            g.setColor(Color.WHITE);
 
+
            drawCentString(g,String.valueOf(pieces[i]),x,y);
 
        }
@@ -156,7 +203,7 @@ public class Puzzle extends JPanel{
            g.setFont(puzzlePannel.getFont().deriveFont(Font.BOLD,18));
            g.setColor(Color.BLACK);
            String s = "Click To Start!";
-           g.drawString(s,(puzzlePannel.getWidth()-g.getFontMetrics().stringWidth(s))/2,puzzlePannel.getHeight()-margin);
+           g.drawString(s,(puzzlePannel.getWidth()-g.getFontMetrics().stringWidth(s))/2,(puzzlePannel.getHeight()- margin));
        }
 
    }
@@ -165,7 +212,7 @@ public class Puzzle extends JPanel{
      FontMetrics fM = g.getFontMetrics();
      int ascending = fM.getAscent();
      int descending = fM.getDescent();
-       g.drawString(s,x+ (pieceSize - fM.stringWidth(s))/2,y+(ascending +(pieceSize - (ascending-descending))/2));
+       g.drawString(s,(x+ (pieceSize - fM.stringWidth(s))/2),(y+(ascending +(pieceSize - (ascending+descending))/2)));
    }
 
    @Override
@@ -189,6 +236,9 @@ public class Puzzle extends JPanel{
            frame.setVisible(true);
 
        });
+
+
+
    }
 
 
