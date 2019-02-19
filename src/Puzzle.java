@@ -39,7 +39,7 @@ public class Puzzle extends JPanel{
 
    public Puzzle(){
        size = 4;
-       dimensions = 550;
+       dimensions =550;
        margin = 30;
 
        //Pieces
@@ -51,10 +51,13 @@ public class Puzzle extends JPanel{
        pieceSize = gridSize/size;
 
        //Set Up JPanel
-       puzzlePannel.setPreferredSize(new Dimension(dimensions, (dimensions+margin)));
+       puzzlePannel.setMinimumSize(new Dimension(100,100));
+       puzzlePannel.setMaximumSize(new Dimension(250, 250));
+
+
        puzzlePannel.setBackground(Color.WHITE);
        puzzlePannel.setForeground(foreGround);
-       puzzlePannel.setFont(new Font("SansSerif",Font.BOLD,60));
+       puzzlePannel.setFont(new Font("SansSerif",Font.BOLD,100));
 
        gameOver = true;
 
@@ -95,7 +98,7 @@ public class Puzzle extends JPanel{
                            int newBlankPiece = blankPiece+dir;
                            pieces[blankPiece] = pieces[newBlankPiece];
                            blankPiece= newBlankPiece;
-                       } while(blankPiece!= clickPos);
+                       } while(blankPiece != clickPos);
 
                        pieces[blankPiece] = 0;
                        }
