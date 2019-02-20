@@ -1,3 +1,5 @@
+package PuzzleProg;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -33,7 +35,7 @@ public class Puzzle extends JPanel{
     //Game Over [true = game over, false !=]
     private boolean gameOver;
     //Log4J setup
-    static final Logger logger = LogManager.getLogger(Puzzle.class);
+    private static final Logger log = LogManager.getLogger(Puzzle.class);
 
     private JPanel puzzlePannel = new JPanel();
 
@@ -121,6 +123,7 @@ public class Puzzle extends JPanel{
 
    private void newGame(){
        do{
+           log.error("new game starting");
            reset();
            shuffle();
        } while(!isSolvable());
@@ -128,6 +131,7 @@ public class Puzzle extends JPanel{
    }
 
    private void reset(){
+       log.debug("resetting");
        for(int i =0; i<pieces.length;i++){
            pieces[i]= (i+1) % pieces.length;
        }
@@ -232,7 +236,7 @@ public class Puzzle extends JPanel{
        SwingUtilities.invokeLater(() -> {
            JFrame frame = new JFrame();
            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-           frame.setTitle("Row 2's Puzzle Game");
+           frame.setTitle("Row 2's PuzzleProg.Puzzle Game");
            frame.add(new Puzzle(),BorderLayout.CENTER);
            frame.pack();
            frame.setLocationRelativeTo(null);
