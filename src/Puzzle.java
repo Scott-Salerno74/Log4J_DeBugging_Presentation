@@ -1,11 +1,11 @@
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
-import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.Random;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 
 
@@ -33,9 +33,10 @@ public class Puzzle extends JPanel{
     //Game Over [true = game over, false !=]
     private boolean gameOver;
     //Log4J setup
-    static final Logger logger = LogManager.getLogger(Puzzle.class);
+    private static final Logger log = LogManager.getLogger(Puzzle.class);
 
     private JPanel puzzlePannel = new JPanel();
+    private JFrame puzzleFrame = new JFrame();
 
    public Puzzle(){
        size = 4;
@@ -59,21 +60,24 @@ public class Puzzle extends JPanel{
        puzzlePannel.setForeground(foreGround);
        puzzlePannel.setFont(new Font("SansSerif",Font.BOLD,100));
 
-       gameOver = true;
 
-       puzzlePannel.addMouseListener(new MouseAdapter() {
+       puzzleFrame.addMouseListener(new MouseAdapter() {
+
            @Override
            public void mousePressed(MouseEvent e){
+               log.info("Mouse has been pressed!");
                if(gameOver){
                    newGame();
                }
                else{
+                   log.debug("You clicked A portion of the frame");
                    int ex = e.getX() -margin;
                    int ey = e.getY() -margin;
                     //grid clicking
                    if (ex<0||ex >gridSize || ey<0 || ey >gridSize){
                        return;
                    }
+                   log.info("You have pressed a Square in the Grid");
                    int c1 = ex/ pieceSize;
                    int r1 = ey/ pieceSize;
 
@@ -83,13 +87,15 @@ public class Puzzle extends JPanel{
 
                    //convert to coordinate
                    int clickPos = r1*size+c1;
-                   int dir =0;
+                   int dir = 0;
                    //search direction for movement
                    if (c1 ==c2&& Math.abs(r1-r2)>0) {
                         dir =(r1 -r2) > 0 ? size: -size;
+                        log.info("searching for movement options and changing size");
 
                    } else if(r1 ==r2 && Math.abs(c1-c2)>0){
                        dir =(c1 -c2) > 0 ? 1: -1;
+                       log.debug("2nd attempt to make a move");
 
                    }
                    if (dir != 0){
@@ -99,14 +105,16 @@ public class Puzzle extends JPanel{
                            pieces[blankPiece] = pieces[newBlankPiece];
                            blankPiece= newBlankPiece;
                        } while(blankPiece != clickPos);
-
+                             log.info("Got in while loop");
                        pieces[blankPiece] = 0;
                        }
+                   log.info("Block has been moved");
+
                        //check if solved
                    gameOver = isSolved();
                    }
                    //repaint panel
-                repaint();
+               repaint();
                }
 
        });
@@ -120,6 +128,8 @@ public class Puzzle extends JPanel{
    }
 
    private void newGame(){
+       log.info("New Game Has been started");
+       log.debug("Debugging the New Game");
        do{
            reset();
            shuffle();
@@ -128,6 +138,7 @@ public class Puzzle extends JPanel{
    }
 
    private void reset(){
+       log.info("The game has been reset");
        for(int i =0; i<pieces.length;i++){
            pieces[i]= (i+1) % pieces.length;
        }
@@ -160,6 +171,7 @@ public class Puzzle extends JPanel{
    }
 
    private boolean isSolved(){
+
        if(pieces[pieces.length -1] !=0)
            return false;
 
@@ -167,7 +179,9 @@ public class Puzzle extends JPanel{
            if(pieces[i] != i+1)
                return false;
        }
+       log.info("The Puzzle Has been solved");
        return true;
+
    }
 
    private void drawGrid(Graphics2D g){
@@ -230,13 +244,13 @@ public class Puzzle extends JPanel{
 
    public void run(){
        SwingUtilities.invokeLater(() -> {
-           JFrame frame = new JFrame();
-           frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-           frame.setTitle("Row 2's Puzzle Game");
-           frame.add(new Puzzle(),BorderLayout.CENTER);
-           frame.pack();
-           frame.setLocationRelativeTo(null);
-           frame.setVisible(true);
+           puzzleFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+           puzzleFrame.setTitle("Row 2's Puzzle Game");
+           puzzleFrame.add(new Puzzle(),BorderLayout.CENTER);
+           puzzleFrame.pack();
+           puzzleFrame.setLocationRelativeTo(null);
+           puzzleFrame.setVisible(true);
+           puzzleFrame.setSize(600,600);
 
        });
 
