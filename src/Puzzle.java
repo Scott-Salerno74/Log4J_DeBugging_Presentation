@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.PixelGrabber;
 import java.util.Random;
 
 
@@ -35,9 +36,6 @@ public class Puzzle extends JPanel{
     //Log4J setup
     private static final Logger log = LogManager.getLogger(Puzzle.class);
 
-    private JPanel puzzlePannel = new JPanel();
-    private JFrame puzzleFrame = new JFrame();
-
    public Puzzle(){
        size = 4;
        dimensions =550;
@@ -52,16 +50,17 @@ public class Puzzle extends JPanel{
        pieceSize = gridSize/size;
 
        //Set Up JPanel
-       puzzlePannel.setMinimumSize(new Dimension(100,100));
-       puzzlePannel.setMaximumSize(new Dimension(250, 250));
+       setMinimumSize(new Dimension(100,100));
+       setMaximumSize(new Dimension(250, 250));
 
 
-       puzzlePannel.setBackground(Color.WHITE);
-       puzzlePannel.setForeground(foreGround);
-       puzzlePannel.setFont(new Font("SansSerif",Font.BOLD,100));
+       setBackground(Color.WHITE);
+       //create a puzzle with a picture
+      setForeground(foreGround);
+      setFont(new Font("SansSerif",Font.BOLD,100));
 
 
-       puzzleFrame.addMouseListener(new MouseAdapter() {
+      addMouseListener(new MouseAdapter() {
 
            @Override
            public void mousePressed(MouseEvent e){
@@ -102,19 +101,23 @@ public class Puzzle extends JPanel{
                        //move tile
                        do{
                            int newBlankPiece = blankPiece+dir;
+                           log.debug("Got new Blank Position");
                            pieces[blankPiece] = pieces[newBlankPiece];
+                           log.debug("Changed position in Array");
                            blankPiece= newBlankPiece;
+                           log.debug("blank piece now has value of new location");
                        } while(blankPiece != clickPos);
                              log.info("Got in while loop");
                        pieces[blankPiece] = 0;
                        }
-                   log.info("Block has been moved");
+
 
                        //check if solved
                    gameOver = isSolved();
                    }
                    //repaint panel
                repaint();
+               log.info("Block has been moved");
                }
 
        });
@@ -200,7 +203,7 @@ public class Puzzle extends JPanel{
                continue;
            }
            //other pieces
-           g.setColor(puzzlePannel.getForeground());
+           g.setColor(getForeground());
            g.fillRoundRect(x,y,pieceSize,pieceSize,25,25);
            g.setColor(Color.BLACK);
            g.drawRoundRect(x,y,pieceSize,pieceSize,25,25);
@@ -217,10 +220,10 @@ public class Puzzle extends JPanel{
 
    private void drawStart(Graphics2D g){
        if(gameOver){
-           g.setFont(puzzlePannel.getFont().deriveFont(Font.BOLD,18));
+           g.setFont(getFont().deriveFont(Font.BOLD,18));
            g.setColor(Color.BLACK);
            String s = "Click To Start!";
-           g.drawString(s,(puzzlePannel.getWidth()-g.getFontMetrics().stringWidth(s))/2,(puzzlePannel.getHeight()- margin));
+           g.drawString(s,(getWidth()-g.getFontMetrics().stringWidth(s))/2,(getHeight()- margin));
        }
 
    }
@@ -244,6 +247,7 @@ public class Puzzle extends JPanel{
 
    public void run(){
        SwingUtilities.invokeLater(() -> {
+           JFrame puzzleFrame = new JFrame();
            puzzleFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
            puzzleFrame.setTitle("Row 2's Puzzle Game");
            puzzleFrame.add(new Puzzle(),BorderLayout.CENTER);

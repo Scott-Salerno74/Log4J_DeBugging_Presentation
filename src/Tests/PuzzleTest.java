@@ -6,6 +6,7 @@ public class PuzzleTest {
 
     @org.junit.Test
     public void paintComponent() {
+
     }
 
     @org.junit.Test
